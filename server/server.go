@@ -20,6 +20,7 @@ func init(){
 	cdir, _ := os.Getwd()
 	splits := strings.Split(cdir, "/")
 	ROOT = strings.Join(splits[:len(splits)-1],"/" )+ ROOT
+
 }
 
 
@@ -88,9 +89,8 @@ func HandleServer(conn net.Conn){
 	buffer := make([]byte, BUFFERSIZE)
 	for {
 		n,_ := conn.Read(buffer)
-		command := string(buffer[:n])
+		command := strings.TrimSpace(string(buffer[:n]))
 		commandArr := strings.Split(command," ")
-
 
 		switch strings.ToLower(commandArr[0]) {
 

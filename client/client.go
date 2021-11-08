@@ -16,7 +16,7 @@ const (
 	BUFFERSIZE =4096
 )
 
-var ROOT = "../filestore/clientDir/"
+var ROOT = "../fileStore"
 
 //dynamic root dir
 func init(){

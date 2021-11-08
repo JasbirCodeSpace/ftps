@@ -12,7 +12,6 @@ import (
 )
 
 func getDIR(conn net.Conn){
-	
 	files, err := ioutil.ReadDir(ROOT)
 
 	if err!=nil{
@@ -37,8 +36,15 @@ func changeDIR(conn net.Conn, dir string){
 	if dir==".."{
 		splits := strings.Split(ROOT,"/")
 		ROOT = strings.Join(splits[:len(splits)-1],"/" )
+		fmt.Println(ROOT)
 	}else{
-		tempROOT := ROOT  + "/"+ dir
+		tempROOT := ""
+		if ROOT == "/"{
+			tempROOT = ROOT + dir
+		}else{
+			tempROOT = ROOT  + "/"+ dir
+		}
+		fmt.Println(tempROOT)
 		_, err := ioutil.ReadDir(tempROOT)
 		if err!=nil{
 			conn.Write([]byte(err.Error()))
