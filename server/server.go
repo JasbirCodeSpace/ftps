@@ -25,7 +25,7 @@ func init(){
 
 
 func main(){
-	server, err := net.Listen("tcp", ":"+PORT)
+	server, err := net.Listen("tcp6", ":"+PORT)
 
 	defer server.Close()
 
@@ -100,6 +100,7 @@ func HandleServer(conn net.Conn){
 			fileSize,err := strconv.ParseInt(string(buffer[:n]),10, 64)
 			log.Println(fileSize)
 			if err!=nil || fileSize ==-1{
+				log.Println(err)
 				log.Println("FILE ERROR")
 				continue
 			}

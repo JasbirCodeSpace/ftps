@@ -26,7 +26,7 @@ func init(){
 }
 
 func main(){
-	server, err := net.Dial("tcp", HOST+":"+PORT)
+	server, err := net.Dial("tcp6", HOST+":"+PORT)
 
 	defer server.Close()
 
