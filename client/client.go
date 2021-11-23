@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"bufio"
 	"fmt"
 	"log"
@@ -25,14 +27,40 @@ func init(){
 	ROOT = strings.Join(splits[:len(splits)-1],"/" )+ ROOT
 }
 
+const rootCert = `-----BEGIN CERTIFICATE-----
+MIICGTCCAb+gAwIBAgIUGqDt34TV7GOlqIxUJeNcBJZuGFYwCgYIKoZIzj0EAwIw
+YjELMAkGA1UEBhMCSU4xDjAMBgNVBAgMBURlbGhpMQ4wDAYDVQQHDAVEZWxoaTES
+MBAGA1UECgwJbG9jYWxob3N0MQswCQYDVQQLDAJDTjESMBAGA1UEAwwJZnRwc2Vy
+dmVyMB4XDTIxMTEyMzE0NTI1OVoXDTMxMTEyMTE0NTI1OVowYjELMAkGA1UEBhMC
+SU4xDjAMBgNVBAgMBURlbGhpMQ4wDAYDVQQHDAVEZWxoaTESMBAGA1UECgwJbG9j
+YWxob3N0MQswCQYDVQQLDAJDTjESMBAGA1UEAwwJZnRwc2VydmVyMFkwEwYHKoZI
+zj0CAQYIKoZIzj0DAQcDQgAEAxgzx96lQzbvC+S2lNkGzFORalrFJ0jC5GWcKoSO
+yPOnaCRIlUwT2lZ9IMDkicWeHpAlPLqm0UxSgPFhEtLTl6NTMFEwHQYDVR0OBBYE
+FPmkknrazmMylpZOCXZkaNjOfad9MB8GA1UdIwQYMBaAFPmkknrazmMylpZOCXZk
+aNjOfad9MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDSAAwRQIgRUxLR7F2
+hVC3+o33XbesY2K65aDExNKLJIEG/q3zeBMCIQCa5k9ijdiKSJEc5YyQGt+Nx4V/
+VI3LodE91HHz1aCHig==
+-----END CERTIFICATE-----
+`
+
 func main(){
-	server, err := net.Dial("tcp6", HOST+":"+PORT)
+
+	roots := x509.NewCertPool()
+	ok := roots.AppendCertsFromPEM([]byte(rootCert))
+	if !ok {
+		log.Fatal("failed to parse root certificate")
+	}
+	config := &tls.Config{RootCAs: roots,InsecureSkipVerify: true}
+	
+
+	server, err := tls.Dial("tcp", HOST+":"+PORT, config)
 
 	defer server.Close()
 
 	if err != nil{
 		log.Fatal(err)
 	}
+
 	log.Println("TCP server is Connected @ ",HOST,":", PORT)
 
 	AuthClient(server)
@@ -57,6 +85,7 @@ func AuthClient(conn net.Conn){
 		conn.Write([]byte(uname))
 		conn.Write([]byte(passwd))
 		n, _ := conn.Read(buffer)
+
 	if string(buffer[:n]) == "1"{
 			fmt.Println("Authentication Successful")
 			validated=true
