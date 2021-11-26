@@ -30,10 +30,8 @@ func init(){
 func main(){
 
 	serverCert, _ := ioutil.ReadFile("server.pem")
-	log.Println(string(serverCert))
 
 	serverKey, _ := ioutil.ReadFile("server.key")
-	log.Println(string(serverKey))
 
 	cer, err := tls.X509KeyPair([]byte(serverCert), []byte(serverKey))
 	if err != nil {

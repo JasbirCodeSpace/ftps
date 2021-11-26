@@ -88,7 +88,7 @@ func SendFile(conn net.Conn, name string){
 func GetFile(conn net.Conn, name string, fileSize int64){
 	// key, _ := ioutil.ReadFile("key.txt")
 	// fmt.Println(key)
-	outputFile, err := os.Create("../filestore/clientDir/" + name)
+	outputFile, err := os.Create("../filestore/serverDir/" + name)
 
 	if err != nil {
 		fmt.Println(err)

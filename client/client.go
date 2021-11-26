@@ -32,12 +32,11 @@ func init(){
 func main(){
 
 	rootCert, _ := ioutil.ReadFile("client.pem")
-	log.Println(string(rootCert))
 
 	roots := x509.NewCertPool()
 	ok := roots.AppendCertsFromPEM([]byte(rootCert))
 	if !ok {
-		log.Fatal("failed to parse root certificate")
+		log.Fatal("Error: failed to parse root certificate")
 	}
 	config := &tls.Config{RootCAs: roots,InsecureSkipVerify: true}
 	
@@ -90,7 +89,7 @@ func HandleClient(conn net.Conn){
 	buffer := make([]byte, BUFFERSIZE)
 
 	for {
-		fmt.Printf("ftp> ")
+		fmt.Printf("ftps> ")
 		cmd, _  := stdreader.ReadString('\n')
 		cmd = strings.TrimSpace(strings.Trim(cmd, "\n"))
 		cmdArr := strings.Split(cmd, " ")

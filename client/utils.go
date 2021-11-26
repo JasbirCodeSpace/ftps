@@ -29,7 +29,7 @@ import (
 //}
 
 func DOWNLOAD(conn net.Conn, name string, fileSize int64){
-	outputFile, err := os.Create(ROOT + name)
+	outputFile, err := os.Create("../filestore/clientDir/" + name)
 
 	if err != nil {
 		fmt.Println(err)
@@ -50,7 +50,7 @@ func DOWNLOAD(conn net.Conn, name string, fileSize int64){
 }
 
 func SendFile(conn net.Conn, name string){
-	inputFile, err := os.Open(ROOT + "/" + name)
+	inputFile, err := os.Open("../filestore/clientDir/" + name)
 	defer inputFile.Close()
 
 	if err !=nil {
