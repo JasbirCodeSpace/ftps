@@ -1,28 +1,31 @@
 package main
 
 import (
-	"ftpserver/server/credentials"
-	"crypto/tls"
 	"bufio"
+	"crypto/tls"
+	"ftpserver/server/credentials"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
-	"io/ioutil"
 )
+
 const (
 	PORT = "9090"
 	BUFFERSIZE = 4096
 )
 
-var  ROOT = "../filestore"
+var  ROOT = "/filestore"
+
+
+
 //dynamic root dir
 func init(){
 	cdir, _ := os.Getwd()
 	splits := strings.Split(cdir, "/")
 	ROOT = strings.Join(splits[:len(splits)-1],"/" )+ ROOT
-
 }
 
 
@@ -42,10 +45,9 @@ func main(){
 
 	server, err := tls.Listen("tcp", ":"+PORT, config)
 
-	defer server.Close()
-
 	if err != nil{
 		log.Fatal(err)
+		defer server.Close()
 	}
 	log.Println("TCP server is UP @ localhost:", PORT)
 
@@ -63,7 +65,6 @@ func main(){
 
 
 func GetCred() *credentials.CredArr{
-
 	f, _ := os.Open("credential.json")
 	var creds credentials.CredArr
 	creds.FromJSON(f)
