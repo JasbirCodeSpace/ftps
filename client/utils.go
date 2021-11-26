@@ -8,28 +8,9 @@ import (
 	"strconv"
 )
 
-//func UPLOAD_HANDLER(conn net.Conn, name string){
-//	inputFile, err := os.Open(name)
-//	if err !=nil {
-//		fmt.Println(err.Error()))
-//		return
-//	}else{
-//		conn.Write([]byte("1"))
-//	}
-//	time.Sleep(100*time.Microsecond)
-//
-//	defer inputFile.Close()
-//	fileReader := bufio.NewReader(inputFile)
-//
-//	clientConnWriter := bufio.NewWriter(conn)
-//
-//	io.Copy(clientConnWriter, fileReader)
-//
-//	clientConnWriter.Flush()
-//}
 
 func DOWNLOAD(conn net.Conn, name string, fileSize int64){
-	outputFile, err := os.Create(ROOT + name)
+	outputFile, err := os.Create(ROOT + "/clientDir/" +  name)
 
 	if err != nil {
 		fmt.Println(err)
@@ -51,7 +32,6 @@ func DOWNLOAD(conn net.Conn, name string, fileSize int64){
 
 func SendFile(conn net.Conn, name string){
 	inputFile, err := os.Open(ROOT + "/" + name)
-	defer inputFile.Close()
 
 	if err !=nil {
 		fmt.Println("ERROR: ", err.Error())
@@ -62,6 +42,8 @@ func SendFile(conn net.Conn, name string){
 		//send file Size
 		conn.Write([]byte(strconv.FormatInt(stats.Size(),10)))
 	}
+
+	defer inputFile.Close()
 	//time.Sleep(100*time.Microsecond)
 	buffer := make([]byte, BUFFERSIZE)
 	for {

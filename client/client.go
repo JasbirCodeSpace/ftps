@@ -1,16 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"crypto/tls"
 	"crypto/x509"
-	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
-	"io/ioutil"
 )
 
 const (
@@ -19,7 +19,7 @@ const (
 	BUFFERSIZE =4096
 )
 
-var ROOT = "../fileStore"
+var ROOT = "/filestore"
 
 //dynamic root dir
 func init(){
@@ -44,11 +44,11 @@ func main(){
 
 	server, err := tls.Dial("tcp", HOST+":"+PORT, config)
 
-	defer server.Close()
-
 	if err != nil{
 		log.Fatal(err)
 	}
+
+	defer server.Close()
 
 	log.Println("TCP server is Connected @ ",HOST,":", PORT)
 
@@ -90,7 +90,7 @@ func HandleClient(conn net.Conn){
 	buffer := make([]byte, BUFFERSIZE)
 
 	for {
-		fmt.Printf("ftp> ")
+		fmt.Printf("sftp> ")
 		cmd, _  := stdreader.ReadString('\n')
 		cmd = strings.TrimSpace(strings.Trim(cmd, "\n"))
 		cmdArr := strings.Split(cmd, " ")
